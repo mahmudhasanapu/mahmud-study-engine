@@ -2,67 +2,75 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from services.flashcard_service import FlashcardService
-
-
-
-# Streamlit import
 import streamlit as st
 
-# Import your services (Flashcard, Quiz, Summary)
 from services.flashcard_service import FlashcardService
 from services.quiz_service import QuizService
 from services.summary_service import SummaryService
+from services.evaluation_service import EvaluationService
 
-# Page configuration
+
 st.set_page_config(
-    page_title="AI Study Engine",  # Browser tab title
-    layout="wide"  # Wider layout for better UI
+    page_title="Mahmud’s Study Engine",
+    layout="wide"
 )
 
-# Main title
-st.title("AI Study Engine")
+st.title("Mahmud’s Study Engine")
 st.markdown("Generate Flashcards, Quizzes, and Summaries from any text!")
 
-
-# Dropdown to select feature
 feature = st.selectbox(
     "Choose Feature",
-    ["Flashcards", "Quiz", "Summary"]
+    ["Flashcards", "Quiz", "Summary", "Answer Evaluation"]
 )
 
-# Large text area for user input
-text_input = st.text_area(
-    "Enter your study text here",  # Placeholder
-    height=200  # Height in pixels
-)
+if feature != "Answer Evaluation":
 
-# Button to generate output
-if st.button("Generate"):
+    text_input = st.text_area(
+        "Enter your study text here",
+        height=200,
+        key="study_text"
+    )
 
-    # Check if user entered text
-    if not text_input.strip():
-        st.warning("Please enter some text!")
-    else:
-        # Decide which service to call based on selected feature
-        if feature == "Flashcards":
-            service = FlashcardService()
-            output = service.generate_flashcards(text_input)
+    if st.button("Generate"):
 
-        elif feature == "Quiz":
-            service = QuizService()
-            output = service.generate_quiz(text_input)
-
-        elif feature == "Summary":
-            service = SummaryService()
-            output = service.generate_summary(text_input)
-
+        if not text_input.strip():
+            st.warning("Please enter some text!")
         else:
-            output = "Invalid Feature"
+            if feature == "Flashcards":
+                service = FlashcardService()
+                output = service.generate_flashcards(text_input)
 
-        # Display the output in JSON format
-        st.subheader(f"{feature} Output")
-        st.json(output)
+            elif feature == "Quiz":
+                service = QuizService()
+                output = service.generate_quiz(text_input)
 
+            elif feature == "Summary":
+                service = SummaryService()
+                output = service.generate_summary(text_input)
+
+            st.subheader(f"{feature} Output")
+            st.json(output)
+
+
+else:
+    st.subheader("Answer Evaluation")
+
+    question = st.text_input("Enter the question", key="eval_q")
+    correct_answer = st.text_area("Enter the correct answer", key="eval_correct")
+    user_answer = st.text_area("Enter the user's answer", key="eval_user")
+
+    if st.button("Evaluate Answer"):
+        if not question or not correct_answer or not user_answer:
+            st.warning("Please fill in all fields!")
+        else:
+            service = EvaluationService()
+            result = service.evaluate(
+                question=question,
+                correct_answer=correct_answer,
+                user_answer=user_answer
+            )
+
+            st.subheader("Evaluation Result")
+            st.json(result)
 
 

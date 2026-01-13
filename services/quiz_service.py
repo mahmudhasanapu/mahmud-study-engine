@@ -1,5 +1,3 @@
-# services/quiz_service.py
-
 from providers.groq_provider import GroqProvider
 from prompts.quiz_prompt import build_quiz_prompt
 from ui.utils import parse_ai_output

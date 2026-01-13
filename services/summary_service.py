@@ -1,5 +1,3 @@
-# services/summary_service.py
-
 from providers.groq_provider import GroqProvider
 from prompts.summary_prompt import build_summary_prompt
 from ui.utils import parse_ai_output
