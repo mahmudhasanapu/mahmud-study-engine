@@ -178,7 +178,7 @@ output formats to support future extension and production usage.
                                       Live Demo
 
 The application has been deployed using Streamlit and can be accessed via the link below:
-
+[text](https://ai-study-engine-asrriyxappaadvcap6ymtef.streamlit.app/~/+/#mahmuds-study-engine)
 
 
                                  Submission Checklist
